@@ -108,21 +108,17 @@ impl Simulation {
     pub fn run(&mut self) -> () {
         let mut fittest = self.find_fittest();
         println!("starting iterations");
-        // print_generation(&self.population);
 
         for _ in 0..self.max_iterations {
             self.generate_next_generation();
 
             let challenger = self.find_fittest();
 
-            // println!("challenger {} Fittest {}", challenger.fitness, fittest.fitness);
             if challenger.fitness > fittest.fitness {
                 fittest = challenger;
             }
-
-            // println!("{}", fittest);
-            // print_generation(&self.population);
         }
+        println!("{}", fittest);
     }
 
     fn find_fittest(&self) -> Path {
@@ -164,6 +160,7 @@ impl Simulation {
         let mut next_generation = Vec::new();
         next_generation.extend_from_slice(&self.population[0..surviving_parent_count]);
         next_generation.append(&mut offspring);
+        // Add a few weak individuals to keep the genetic diversity higher
         next_generation.extend_from_slice(&self.population[self.population.len() - 2..self.population.len()]);
 
         assert!(next_generation.len() == self.population.len());
@@ -192,13 +189,6 @@ fn initial_population(city_list: &Vec<City>, population_count: usize) -> Vec<Pat
     }
 
     population
-}
-
-fn print_generation(generation: &Vec<Path>) {
-    println!("Generation");
-    for p in 0..10 {
-        println!("{}", generation[p]);
-    }
 }
 
 fn main() {
